@@ -6,3 +6,7 @@ COPY . /usr/share/nginx/html
 EXPOSE 80
 
 
+# https://hub.docker.com/repository/docker/cagatayakk/kitten-carousel
+
+# docker run -d --name roman -p 80:80 cagatayakk/kitten-carousel
+
