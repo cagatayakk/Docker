@@ -1,0 +1,71 @@
+version: '3.9'
+
+services:
+
+  dbcluster:
+    image: mysql:5.7
+    volumes:
+      - db_volume:/var/lib/mysql
+    networks:
+      - my_network
+    environment:
+       MYSQL_DATABASE: phonebook
+       MYSQL_USER: cagatayakk
+       MYSQL_DATABASE_HOST: dbcluster
+       MYSQL_PASSWORD: P@ssword
+       MYSQL_ROOT_PASSWORD: 123456789
+    deploy:
+      mode: replicated
+      replicas: 1
+      update_config:
+        parallelism: 2
+        order: start-first
+
+  web:
+    image: cagatayakk/phonebook-web
+    ports:
+      - 80:80
+    depends_on:
+      - dbcluster
+    networks:
+      - my_network
+    environment:
+       MYSQL_DATABASE: phonebook
+       MYSQL_USER: cagatayakk
+       MYSQL_DATABASE_HOST: dbcluster
+       MYSQL_PASSWORD: P@ssword
+       MYSQL_ROOT_PASSWORD: 123456789
+    deploy:
+      mode: replicated
+      replicas: 1
+      update_config:
+        parallelism: 2
+        order: start-first
+
+  result:
+    image: cagatayakk/phonebook-result
+    ports:
+      - 8080:80
+    networks:
+      - my_network
+    depends_on:
+      - dbcluster
+    environment:
+       MYSQL_DATABASE: phonebook
+       MYSQL_USER: cagatayakk
+       MYSQL_DATABASE_HOST: dbcluster
+       MYSQL_PASSWORD: P@ssword
+       MYSQL_ROOT_PASSWORD: 123456789
+    deploy:
+      mode: replicated
+      replicas: 1
+      update_config:
+        parallelism: 2
+        order: start-first
+
+volumes:
+  db_volume:
+ 
+networks:
+  my_network:
+    driver: overlay
